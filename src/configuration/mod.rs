@@ -1,14 +1,16 @@
+use std::ops::Deref;
+
 use serde::{Deserialize, Serialize};
 use tokio::fs;
 use anyhow::Result;
 use reqwest as request;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Copy)]
 pub struct Config {
-    pub server_config: ServerConfig,
+    pub server: ServerConfig,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone, Copy)]
 pub struct ServerConfig {
     pub port: i64
 }
@@ -23,7 +25,7 @@ async fn fetch_default_configuration(url: &str) -> Result<Config> {
 
 pub async fn init_config() -> Result<Config> {
     let config_path = "config.toml";
-    let default_config_url = "https://raw.githubusercontent.com/your_username/your_repo/main/default_config.toml";
+    let default_config_url = "https://raw.githubusercontent.com/jetware-mc/quik/master/default-config.toml";
 
     
     if !fs::metadata(config_path).await.is_ok() {
